@@ -1,0 +1,21 @@
+# ========== CLIENT (Next.js) ========== #
+/client/.next
+/client/node_modules
+/client/out
+/client/.env
+/client/.env.local
+/client/.env.production.local
+/client/.env.development.local
+/client/package-lock.json
+
+# ========== SERVER (Laravel) ========== #
+
+/server/vendor
+/server/node_modules
+/server/storage/*.key
+/server/storage/app/public
+/server/storage/logs/*
+/server/storage/debugbar
+/server/.env
+/server/.idea
+/server/phpunit.xml
