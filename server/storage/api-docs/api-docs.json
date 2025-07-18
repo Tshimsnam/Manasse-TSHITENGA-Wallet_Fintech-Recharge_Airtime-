@@ -28,12 +28,12 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "example": "Jean Dupont"
+                                        "example": "Manassé Tshitenga"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "jean@example.com"
+                                        "example": "manasse@gmail.com"
                                     },
                                     "phone": {
                                         "type": "string",
@@ -138,6 +138,42 @@
                 }
             }
         },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Déconnexion de l'utilisateur",
+                "description": "Supprime le token d'accès courant de l'utilisateur connecté.",
+                "operationId": "79854151e609bd20032aa5aa4d5a35c0",
+                "responses": {
+                    "200": {
+                        "description": "Déconnecté avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Déconnecté avec succès"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/wallet/recharge": {
             "post": {
                 "tags": [
@@ -193,6 +229,306 @@
                     },
                     "401": {
                         "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/balance": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Consulter le solde de l'utilisateur connecté",
+                "description": "Retourne le solde actuel du portefeuille de l'utilisateur ainsi que la devise.",
+                "operationId": "9c4fc93fbbefb6b0e0f6b8757a1ed3f8",
+                "responses": {
+                    "200": {
+                        "description": "Solde récupéré avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "balance": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 45.75
+                                        },
+                                        "currency": {
+                                            "type": "string",
+                                            "example": "USD"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/transfer": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Transférer de l'argent à un autre utilisateur",
+                "description": "Permet à un utilisateur connecté de transférer de l'argent à un autre utilisateur via son numéro de téléphone.",
+                "operationId": "165aea863b871163ae96ca83deeb4023",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "receiver_phone",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "receiver_phone": {
+                                        "type": "string",
+                                        "example": "+243900000001"
+                                    },
+                                    "amount": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 10
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transfert effectué avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "vous venez d'effectué un Transfert de 10 au numéro +243900000001."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur de validation ou solde insuffisant",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "votre Solde est insuffisant."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Lister les transactions de l'utilisateur connecté",
+                "description": "Retourne toutes les transactions effectuées ou reçues par l'utilisateur connecté, triées par date décroissante.",
+                "operationId": "bfda4e1c48e3b7bb4f1e79caa3e4cbbc",
+                "responses": {
+                    "200": {
+                        "description": "Liste des transactions",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "type": {
+                                                "type": "string",
+                                                "example": "transfer"
+                                            },
+                                            "amount": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "example": 10.5
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Transfert vers +243900000001"
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "example": "2025-07-18 14:00"
+                                            },
+                                            "direction": {
+                                                "type": "string",
+                                                "example": "sent"
+                                            },
+                                            "target_phone": {
+                                                "type": "string",
+                                                "example": "+243900000002"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/purchase": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Souscrire à un forfait",
+                "description": "Permet à un utilisateur connecté d'acheter un plan (forfait airtime ou data) s'il a un solde suffisant.",
+                "operationId": "c70b50a4cca68ae2a51d0cba0d7b24d7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Achat du forfait réussi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "vous venez de souscrire au forfaits 1G"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Solde insuffisant"
+                    },
+                    "422": {
+                        "description": "Validation échouée (plan_id manquant ou invalide)"
+                    },
+                    "401": {
+                        "description": "Non authentifié (token manquant ou invalide)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/wallet/transferPlan": {
+            "post": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Transférer un forfait à un autre utilisateur",
+                "description": "Permet à un utilisateur connecté de transférer un forfait (airtime ou data) à un autre utilisateur en utilisant son solde principal.",
+                "operationId": "33a44784c638be57ad52f683172386f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "receiver_phone",
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "receiver_phone": {
+                                        "type": "string",
+                                        "example": "+243900000001"
+                                    },
+                                    "plan_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transfert de forfait réussi",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forfait transféré avec succès à manassé"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
