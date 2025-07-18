@@ -25,6 +25,15 @@ class User extends Authenticatable
         'balance',
         'password',
     ];
+    public function sentTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'user_id_from');
+    }
+
+    public function receivedTransactions()
+    {
+        return $this->hasMany(Transaction::class, 'user_id_to');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
