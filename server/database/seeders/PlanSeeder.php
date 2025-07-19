@@ -31,7 +31,7 @@ class PlanSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Data 1GB - $1.5',
+                'name' => 'Data 1GB',
                 'type' => 'data',
                 'price' => 1.50,
                 'value' => 1024,
@@ -39,7 +39,7 @@ class PlanSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Data 2GB - $2.5',
+                'name' => 'Data 2GB',
                 'type' => 'data',
                 'price' => 2.50,
                 'value' => 2048,
