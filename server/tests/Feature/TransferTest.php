@@ -31,8 +31,13 @@ class TransferTest extends TestCase
 
         //Assertions
         $response->assertStatus(200);
-        $response->assertJson(['message' => "vous venez d'effectué un Transfert de3000au numéro+243999888777votre solde actuel est de7000"
-]);
+        $response->assertJsonFragment([
+            'success' => true,
+            'message' => 'Transfert effectué avec succès',
+            'currency' => 'USD',
+            'recipient' => '+243999888777',
+            'new_balance' => '7000.00',
+        ]);
         //Vérifier que les balances ont été mises à jour
         $this->assertEquals(7000, $sender->fresh()->balance);
         $this->assertEquals(5000, $receiver->fresh()->balance);
