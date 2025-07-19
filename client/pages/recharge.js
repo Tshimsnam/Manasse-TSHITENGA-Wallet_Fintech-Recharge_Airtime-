@@ -135,7 +135,7 @@ export default function Recharge() {
                         name="amount"
                         value={amount}
                         onChange={(e) => setAmount(e.target.value)}
-                        className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 py-3 border-gray-300 rounded-md"
+                        className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-7 pr-12 py-3 border-gray-300 rounded-md text-black placeholder-gray-400"
                         placeholder="0.00"
                         min="1"
                         step="0.01"
