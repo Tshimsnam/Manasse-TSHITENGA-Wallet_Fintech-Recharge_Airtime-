@@ -28,6 +28,11 @@ use Illuminate\Support\Facades\Auth;
 
 class WalletController extends Controller
 {
+    //recuperer le plan des purchases(achat credit)
+    public function index()
+    {
+        return response()->json(Plan::all());
+    }
     //obtenir le user connecté
     public function getAuthUser()
     {
@@ -65,7 +70,7 @@ class WalletController extends Controller
      *     )
      * )
      */
-    //recharge du compte
+    //recharge du compte argent
     public function recharge(Request $request)
     {
         $request->validate([
@@ -164,18 +169,28 @@ class WalletController extends Controller
     {
         $request->validate([
             'receiver_phone' => 'required|string|exists:users,phone',
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'required|numeric|min:1|max:10000', // Ajout d'un montant maximum
         ]);
 
         $sender = $request->user();
         $receiver = User::where('phone', $request->receiver_phone)->first();
 
+        // Vérifications supplémentaires
         if ($sender->id === $receiver->id) {
-            return response()->json(['error' => 'Vous ne pouvez pas vous transférer de l’argent.'], 422);
+            return response()->json([
+                'success' => false,
+                'error' => 'Auto-transfert impossible',
+                'message' => 'Vous ne pouvez pas vous transférer de l\'argent à vous-même.'
+            ], 422);
         }
 
         if ($sender->balance < $request->amount) {
-            return response()->json(['error' => 'votre Solde est insuffisant.'], 422);
+            return response()->json([
+                'success' => false,
+                'error' => 'Solde insuffisant',
+                'message' => 'Votre solde actuel (' . $sender->balance . ' USD) est insuffisant pour ce transfert.',
+                'current_balance' => $sender->balance
+            ], 422);
         }
 
         // Transaction sécurisée
@@ -191,10 +206,26 @@ class WalletController extends Controller
                 'type' => 'transfer',
                 'amount' => $request->amount,
                 'description' => 'Transfert vers ' . $receiver->phone,
+                'status' => 'completed'
             ]);
         });
 
-        return response()->json(['message' => 'vous venez d\'effectué un Transfert de' . $request->amount . 'au numéro' . $receiver->phone . 'votre solde actuel est de' . $sender->balance]);
+        // Récupérer les données fraîches
+        $updatedSender = $sender->fresh();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transfert effectué avec succès',
+            'details' => [
+                'amount' => $request->amount,
+                'currency' => 'USD',
+                'recipient' => $receiver->phone,
+                'recipient_name' => $receiver->name,
+                'new_balance' => $updatedSender->balance,
+                'transaction_time' => now()->toDateTimeString()
+            ],
+            'user' => $updatedSender->only(['id', 'name', 'phone', 'balance'])
+        ]);
     }
 
     //recupérer l'historique de transaction du l'user connecté
@@ -231,8 +262,8 @@ class WalletController extends Controller
     {
         $user = $this->getAuthUser();
         // $user= User::find(1);
-
         // recuperons toutes les transaction concernant l'utilisateur connecté
+        $user = $this->getAuthUser();
         $transactions = Transaction::where('user_id_from', $user->id)
             ->orWhere('user_id_to', $user->id)
             ->orderByDesc('created_at')
@@ -243,7 +274,7 @@ class WalletController extends Controller
                     'type' => $transaction->type,
                     'amount' => $transaction->amount,
                     'description' => $transaction->description,
-                    'date' => $transaction->created_at->format('Y-m-d H:i'),
+                    'created_at' => $transaction->created_at->toISOString(), // Renvoie la date au format ISO
                     'direction' => $transaction->user_id_from === $user->id ? 'sent' : 'received',
                     'target_phone' => $transaction->user_id_from === $user->id
                         ? optional($transaction->receiver)->phone
