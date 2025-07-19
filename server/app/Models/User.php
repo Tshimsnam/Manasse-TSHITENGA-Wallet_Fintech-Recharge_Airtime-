@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'balance',
+        'airtime_balance',
+        'data_balance',
         'password',
     ];
     public function sentTransactions()
