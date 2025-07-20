@@ -63,7 +63,7 @@ Une application de portefeuille électronique permettant aux utilisateurs de :
         - npm run dev
 
 - Le frontend démarre sur http://localhost:3000
-- Le backend sur http://localhost:8000
+- Le backend démarre sur http://localhost:8000
 
 4. Authentification avec Sanctum
     - Les utilisateurs s’authentifient avec leur phone/mot de passe.
@@ -71,20 +71,23 @@ Une application de portefeuille électronique permettant aux utilisateurs de :
 
 5. Endpoints API
 
-Méthode 	Endpoint	            Description
-POST	    /api/register	        Inscription
-POST	    /api/login	            Connexion
-GET	        /api/wallet/balance	    Voir le solde
-POST	    /api/wallet/recharge	Recharger le compte
-POST	    /api/transfer	        Transférer de l'argent
-GET	        /api/transactions	    Historique des transactions
-GET	        /api/plans	            Liste des forfaits disponibles
-POST	    /api/purchase	        Acheter un forfait
+| Méthode | Endpoint                | Description                          |
+|--------|-------------------------|--------------------------------------|
+| POST   | `/api/register`         | Inscription                          |
+| POST   | `/api/login`            | Connexion                            |
+| GET    | `/api/wallet/balance`   | Voir le solde                        |
+| POST   | `/api/wallet/recharge`  | Recharger le compte                  |
+| POST   | `/api/transfer`         | Transférer de l'argent               |
+| GET    | `/api/transactions`     | Historique des transactions          |
+| GET    | `/api/plans`            | Liste des forfaits disponibles       |
+| POST   | `/api/purchase`         | Acheter un forfait                   |
+
 
 - Tu peux utiliser Thunder Client ou Postman pour tester l'API.
 
 6. Documentation APIs avec swagger:
     - en localhost: http://localhost:8000/api/documentation
+    - en ligne : https://wallet.vivicorp.net/api/documentation
 
 7. Tests
 - Des tests unitaires sont inclus pour les principales fonctionnalités de l'API
@@ -96,6 +99,10 @@ bash:
     a la racine du project vous trouverez:
     - Diagramme ER.drawio.pdf
     - Architecture fonctionnelle.png
+
+9. Deploiement du système
+    1. frontend: https://pronextjs1.vercel.app sur Vercel
+    2. backend: https://wallet.vivicorp.net/ sur Cpannel
 
 
 Contact:
