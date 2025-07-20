@@ -101,8 +101,8 @@ bash:
     - Architecture fonctionnelle.png
 
 9. Deploiement du système
-    1. frontend: https://pronextjs1.vercel.app sur Vercel
-    2. backend: https://wallet.vivicorp.net/ sur Cpannel
+    1. frontend: https://pronextjs1.vercel.app sur Vercel; point d'accès de l'application
+    2. backend: https://wallet.vivicorp.net/ sur Cpannel; API en ligne
 
 
 Contact:
