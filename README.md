@@ -71,15 +71,17 @@ Une application de portefeuille électronique permettant aux utilisateurs de :
 
 5. Endpoints API
 
-Méthode 	Endpoint	            Description
-POST	    /api/register	        Inscription
-POST	    /api/login	            Connexion
-GET	        /api/wallet/balance	    Voir le solde
-POST	    /api/wallet/recharge	Recharger le compte
-POST	    /api/transfer	        Transférer de l'argent
-GET	        /api/transactions	    Historique des transactions
-GET	        /api/plans	            Liste des forfaits disponibles
-POST	    /api/purchase	        Acheter un forfait
+| Méthode | Endpoint                | Description                          |
+|--------|-------------------------|--------------------------------------|
+| POST   | `/api/register`         | Inscription                          |
+| POST   | `/api/login`            | Connexion                            |
+| GET    | `/api/wallet/balance`   | Voir le solde                        |
+| POST   | `/api/wallet/recharge`  | Recharger le compte                  |
+| POST   | `/api/transfer`         | Transférer de l'argent               |
+| GET    | `/api/transactions`     | Historique des transactions          |
+| GET    | `/api/plans`            | Liste des forfaits disponibles       |
+| POST   | `/api/purchase`         | Acheter un forfait                   |
+
 
 - Tu peux utiliser Thunder Client ou Postman pour tester l'API.
 
